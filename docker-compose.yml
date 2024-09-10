@@ -1,0 +1,43 @@
+name: uniko-app
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: postgres-5433
+    volumes:
+      - postgres-data-be:/bitnami/postgresql
+    env_file:
+      - .env.docker
+    ports:
+      - '5433:5432'
+    restart: unless-stopped
+
+  redis:
+    container_name: redis-6379
+    image: bitnami/redis:latest
+    ports:
+      - '6379:6379'
+    env_file:
+      - .env.docker
+    volumes:
+      - redis-data:/bitnami/redis
+    restart: unless-stopped
+
+  captcha-resolver:
+    image: registry.gitlab.com/nhayhoc/bank-captcha-server
+    ports:
+      - 1234:1234
+
+  app:
+    image: auroraphtgrp/uniko:latest
+    container_name: uniko-app
+    depends_on:
+      - postgres
+    ports:
+      - '3003:3003'
+    env_file:
+      - .env.docker
+    restart: unless-stopped
+
+volumes:
+  postgres-data-be:
+  redis-data:
