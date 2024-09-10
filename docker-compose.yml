@@ -1,4 +1,3 @@
-name: uniko-app
 services:
   postgres:
     image: bitnami/postgresql:latest
@@ -32,6 +31,7 @@ services:
     container_name: uniko-app
     depends_on:
       - postgres
+    command: sh -c "./docker/wait-for-it.sh postgres-5433:5432 -- npx prisma migrate deploy && yarn start:prod"
     ports:
       - '3003:3003'
     env_file:
