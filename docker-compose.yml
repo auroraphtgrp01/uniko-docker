@@ -22,6 +22,7 @@ services:
     restart: unless-stopped
 
   captcha-resolver:
+    container_name: captcha-solver
     image: registry.gitlab.com/nhayhoc/bank-captcha-server
     ports:
       - 1234:1234
@@ -31,7 +32,7 @@ services:
     container_name: uniko-app
     depends_on:
       - postgres
-    command: sh -c "/usr/local/bin/wait-for-it.sh postgres-5433:5432 -- npx prisma migrate deploy && yarn start:prod"
+    command: sh -c "/usr/local/bin/wait-for-it.sh postgres-5433:5432 -- npx prisma migrate deploy && npx playwright install && yarn playwright install-deps && yarn start:prod"
     ports:
       - '3003:3003'
     env_file:
